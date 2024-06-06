@@ -1,35 +1,16 @@
 const express = require("express");
 
-const kodersUseCase = require("../usecases/koders.usecase");
-const auth = require("../middlewares/auth.middleware");
+const GenerationUseCase = require("../usecases/generation.usecase");
 
 const router = express.Router();
 
-router.get("/", auth, async (request, response) => {
-  try {
-    const koders = await kodersUseCase.getAll();
-    response.json({
-      success: true,
-      data: {
-        koders,
-      },
-    });
-  } catch (error) {
-    response.status(error.status || 500);
-    response.json({
-      success: false,
-      error: error.message,
-    });
-  }
-});
-
 router.post("/", async (request, response) => {
   try {
-    const koderCreate = await kodersUseCase.create(request.body);
+    const createdGeneration = await GenerationUseCase.create(request.body);
     response.json({
       success: true,
       data: {
-        koder: koderCreate,
+        Generation: createdGeneration,
       },
     });
   } catch (error) {
@@ -41,16 +22,13 @@ router.post("/", async (request, response) => {
   }
 });
 
-router.get("/:id", auth, async (request, response) => {
+router.get("/", async (request, response) => {
   try {
-    // const {id} = request.params;
-    const id = request.params.id;
-    const koder = await kodersUseCase.getById(id);
-
+    const Generation = await GenerationUseCase.getAll();
     response.json({
       success: true,
       data: {
-        koder,
+        Generation,
       },
     });
   } catch (error) {
@@ -62,15 +40,14 @@ router.get("/:id", auth, async (request, response) => {
   }
 });
 
-router.delete("/:id", auth, async (request, response) => {
+router.delete("/:id", async (request, response) => {
   try {
     const id = request.params.id;
-    const koderDeleted = await kodersUseCase.deleteById(id);
-
+    const GenerationDelete = await GenerationUseCase.deleteById(id);
     response.json({
       success: true,
       data: {
-        koder: koderDeleted,
+        Generation: GenerationDelete,
       },
     });
   } catch (error) {
@@ -82,15 +59,17 @@ router.delete("/:id", auth, async (request, response) => {
   }
 });
 
-router.patch("/:id", auth, async (request, response) => {
+router.patch("/:id", async (request, response) => {
   try {
     const id = request.params.id;
-    const koderUpdate = await kodersUseCase.updateById(id, request.body);
-
+    const GenerationUpdate = await GenerationUseCase.updateById(
+      id,
+      request.body
+    );
     response.json({
       success: true,
       data: {
-        koder: koderUpdate,
+        Generation: GenerationUpdate,
       },
     });
   } catch (error) {
